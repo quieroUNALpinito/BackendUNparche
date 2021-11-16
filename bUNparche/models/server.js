@@ -2,11 +2,16 @@ const express = require('express')
 const cors = require('cors')
 
 
-class Server{
-    constructor(){
+
+class Server {
+    constructor() {
         this.app = express()
         this.port = process.env.PORT
         this.usuariosPath = '/api/usuarios'
+        
+        //Conectar BD
+
+
 
         //middlewares
         this.middlewares()
@@ -14,31 +19,33 @@ class Server{
         //rutas de mi app
         this.routes()
     }
+    
 
+middlewares() {
+    //CORS
+    this.app.use(cors())
 
+    //Este middleware es para recibir los metodos post y hace un parseo y lectura del body
+    this.app.use(express.json())
 
-    middlewares(){
-        //CORS
-        this.app.use(cors())
+    //Para manejar objetos que vienen desde un formulario
+    this.app.use(express.urlencoded({ extended: false }))
 
-        //Este middleware es para recibir los metodos post y hace un parseo y lectura del body
-        this.app.use(express.json())
+    //Para usar la carpeta publica que es el frontend donde el usuario ve  la app
+    this.app.use(express.static('public'))
 
-        //Para usar la carpeta publica que es el frontend donde el usuario ve  la app
-        this.app.use(express.static('public'))
-
-    }
+}
 //configuro mis rutas
-    routes(){
-        this.app.use(this.usuariosPath , require('../routes/usuarios'))
-    }
+routes() {
+    this.app.use(this.usuariosPath, require('../routes/usuarios'))
+}
 
 
-    listen(){
-        this.app.listen(this.port, ()=>{
-            console.log('server corriendo en el puerto ', this.port);
-        })
-    }
+listen() {
+    this.app.listen(this.port, () => {
+        console.log('server corriendo en el puerto ', this.port);
+    })
+}
 }
 
 module.exports = Server

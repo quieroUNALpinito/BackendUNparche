@@ -51,6 +51,9 @@ const googleSignIn = async(req, res= response)=>{//el response es para obtener e
     
 }
 
+
+
+
 module.exports = {
     usuariosGet,
     usuariosPost,
