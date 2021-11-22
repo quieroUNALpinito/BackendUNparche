@@ -4,7 +4,7 @@ const eventController = require('../controllers/eventos')
 const router = Router()
 
 router.get('/tiposEvento', eventController.tiposEvento)
-router.post('/crearEvento')
+router.post('/crearEvento', eventController.crearEvento)
 
 
 module.exports = router
