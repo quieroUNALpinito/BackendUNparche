@@ -7,7 +7,7 @@ const pool = new Pool({
     host: 'localhost',
     user: 'postgres',
     password: process.env.PASS_BD,
-    database: 'bd_UNparche',
+    database: 'db_UNparche',
     port: '5432'
 })
 
@@ -22,5 +22,6 @@ const getUsers = async (req, res) =>{
 
 
 module.exports = {
-    getUsers
+    getUsers,
+    pool
 }

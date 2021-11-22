@@ -1,1 +1,2 @@
 # BackendUNparche
+run: nodemon app
