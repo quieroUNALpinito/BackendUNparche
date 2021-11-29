@@ -16,6 +16,9 @@
     "express-validator": "^6.13.0",
     "google-auth-library": "^7.10.2",
     "pg": "^8.7.1",
-    "pg-promise": "^10.11.1"
+    "pg-hstore": "^2.3.4",
+    "pg-promise": "^10.11.1",
+    "sequelize": "6.11",
+    "sequelize-auto": "^0.8.5"
   }
 }
