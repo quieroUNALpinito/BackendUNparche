@@ -1,6 +1,6 @@
 const express = require('express')
 const cors = require('cors')
-
+//const db = require('../database/config')
 
 
 class Server {
@@ -10,7 +10,7 @@ class Server {
         this.usuariosPath = '/api/usuarios'
         
         //Conectar BD
-
+        //this.dbConnection()
 
 
         //middlewares
@@ -20,6 +20,20 @@ class Server {
         this.routes()
     }
     
+//conexion BD
+/*async dbConnection(){
+    
+    try {
+        await db.authenticate(); //si molesta probar con authenticate()
+        console.log('DB conectada');
+        console.log('si ', db)
+    } catch (error) {
+        throw new Error (error)
+    }
+}*/
+
+
+
 
 middlewares() {
     //CORS

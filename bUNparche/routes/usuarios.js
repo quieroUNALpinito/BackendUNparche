@@ -6,13 +6,13 @@ const { getUsers } = require('../database/config')
 
 const router = Router()
 
-router.get('/', usuariosGet)
+router.get('/',usuariosGet)
 router.post('/', usuariosPost)
 router.put('/:id', usuariosPut)
 
 //En el array va el listado de middlewares que validan los datos que se envian del frontend
 router.post('/google',[
-    check('id_token', 'el id token de google obligatorio').not().isEmpty(),
+    check('id_token', 'el id token de google es obligatorio').not().isEmpty(),
     validarCampos //Verifica si hay errores con el middleware de arriba
 
 ],googleSignIn)
