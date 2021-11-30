@@ -6,5 +6,7 @@ const router = Router()
 router.get('/tiposEvento', eventController.tiposEvento)
 router.post('/crearEvento', eventController.crearEvento)
 
+router.get('/listarEventos',eventController.listarEventos)
+router.post('/listarEventosByHour',eventController.listarEventosByHour)
 
 module.exports = router
