@@ -51,7 +51,7 @@ const googleSignIn = async(req, res= response)=>{//el response es para obtener e
                 
                 //console.log(existeCorreo.rows.length)
                 if(existeCorreo.rows.length === 0){
-                    await pool.query(`insert into "Usuario" ("ID","Nombres", "Apellidos", "Correo", "Foto") values(nextval('user_id'),'${nombre}', '${apellido}', '${correo}', '${img}')`)
+                    await pool.query(`insert into "Usuario" ("Nombres", "Apellidos", "Correo", "Foto") values('${nombre}', '${apellido}', '${correo}', '${img}')`)
                     const nuevoUsuario = await pool.query(`select * from "Usuario" where "Correo" = '${correo}'`)
                     const {ID, Nombres, Apellidos, Correo, Foto} = nuevoUsuario.rows[0]
                     const token = await generarJWT(ID, Nombres, Apellidos, Correo, Foto)
