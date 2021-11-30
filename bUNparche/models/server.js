@@ -8,6 +8,8 @@ class Server {
         this.app = express()
         this.port = process.env.PORT
         this.usuariosPath = '/api/usuarios'
+        this.eventosPath = '/api/eventos'
+        this.recursosPath = '/api/recursos'
         
         //Conectar BD
         //this.dbConnection()
@@ -52,6 +54,8 @@ middlewares() {
 //configuro mis rutas
 routes() {
     this.app.use(this.usuariosPath, require('../routes/usuarios'))
+    this.app.use(this.eventosPath, require('../routes/eventos'))
+    this.app.use(this.recursosPath, require('../routes/recursos'))
 }
 
 
