@@ -42,7 +42,7 @@ const crearEvento = async (req,res) => {
 }
 const listarEventos = async (req,res) => {
     try{
-        let records = await db.pool.query(' select * from "Evento" order by "Fecha"')
+        let records = await db.pool.query(' select * from "Evento" order by "Hora"::date')
         console.log(records.rows)
         res.json({
             message: 'Sip sirvio',
@@ -55,7 +55,7 @@ const listarEventos = async (req,res) => {
 const listarEventosByHour = async (req,res) => {
     try{
         let { inicio, fin } = req.body
-        let records = await db.pool.query(' select * from "Evento" where "Hora" between \''+inicio+'\' and \''+fin+'\' order by "Fecha"')
+        let records = await db.pool.query(' select * from "Evento" where "Hora"::time between \''+inicio+'\' and \''+fin+'\' order by "Hora"::date')
         console.log(records.rows)
         res.json({
             message: 'Sip sirvio',
