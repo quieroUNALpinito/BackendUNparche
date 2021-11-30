@@ -24,8 +24,34 @@ const crearEvento = async (req,res) => {
         console.log(error)
     }
 }
-
+const listarEventos = async (req,res) => {
+    try{
+        let records = await db.pool.query(' select * from "Evento" order by "Fecha"')
+        console.log(records.rows)
+        res.json({
+            message: 'Sip sirvio',
+            data: records.rows
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
+const listarEventosByHour = async (req,res) => {
+    try{
+        let { inicio, fin } = req.body
+        let records = await db.pool.query(' select * from "Evento" where "Hora" between \''+inicio+'\' and \''+fin+'\' order by "Fecha"')
+        console.log(records.rows)
+        res.json({
+            message: 'Sip sirvio',
+            data: records.rows
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
 module.exports={
     tiposEvento,
-    crearEvento
+    crearEvento,
+    listarEventos,
+    listarEventosByHour
 }
