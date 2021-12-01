@@ -4,6 +4,43 @@ const {validarCampos} = require('../middlewares/validar-campos')
 const {pool} = require("../database/config")
 const {generarJWT} = require('../helpers/generar-jwt')
 
+const getPerfilInfo = async(req,res) => {
+    try{
+      //console.log(bd)
+      let {id} = req.body
+      let records = await pool.query(`select * from "Usuario" where "ID"='`+id+`'`)
+      res.json({
+        data: records.rows,
+        msg: 'get de descripcion'
+      })
+    }catch (error){
+      console.log(error)
+      res.json({
+        status: 'error',
+        msg: error
+      })
+    }
+  }
+  
+  const updatePerfilInfo = async(req,res) => {
+    try{
+      //console.log(bd)
+      let {id, descripcion} = req.body
+      let records = await pool.query(`update "Usuario" set "Descripcion"='`+descripcion+`' where "ID"='`+id+`'`)
+      res.json({
+        status: 'success',
+        msg: 'actualización exitosa'
+      })
+    }catch (error){
+      console.log(error)
+      res.json({
+        status: 'error',
+        msg: error
+      })
+    }
+  }
+  
+
 const usuariosGet = (req, res = response) => {
 
     const {q,edad,cc} = req.query
