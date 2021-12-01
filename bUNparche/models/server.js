@@ -10,6 +10,7 @@ class Server {
         this.usuariosPath = '/api/usuarios'
         this.eventosPath = '/api/eventos'
         this.recursosPath = '/api/recursos'
+        this.gruposPath = '/api/grupos'
         
         //Conectar BD
         //this.dbConnection()
@@ -56,6 +57,7 @@ routes() {
     this.app.use(this.usuariosPath, require('../routes/usuarios'))
     this.app.use(this.eventosPath, require('../routes/eventos'))
     this.app.use(this.recursosPath, require('../routes/recursos'))
+    this.app.use(this.gruposPath, require('../routes/grupos'))
 }
 
 

@@ -25,7 +25,7 @@ const pool = new Pool({
     host: 'localhost',
     user: 'postgres',
     password: process.env.PASS_BD,
-    database: 'db_UNparche',
+    database: 'bd_UNparche',
     port: '5432'
 })
 
