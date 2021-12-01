@@ -1,23 +1,13 @@
 const {response, json} = require('express')//como separamos los callbacks de las rutas para tener todo mas ordenado node no sabe que es ese callback por lo tanto llamamos a response
 const { googleVerify } = require('../helpers/google-verify')
 const {validarCampos} = require('../middlewares/validar-campos')
-//const bd = require('../database/config')
-const {Pool} = require('pg')
-
-const pool = new Pool({
-    //En donde esta mi server de postgres
-    host: 'localhost',
-    user: 'postgres',
-    password: process.env.PASS_BD,
-    database: process.env.NAME_BD,
-    port: process.env_PORT_BD
-})
+const bd = require('../database/config')
 
 const getPerfilInfo = async(req,res) => {
   try{
     //console.log(bd)
     let {id} = req.body
-    let records = await pool.query(`select * from "Usuario" where "ID"='`+id+`'`)
+    let records = await bd.pool.query(`select * from "Usuario" where "ID"='`+id+`'`)
     res.json({
       data: records.rows,
       msg: 'get de descripcion'
@@ -35,7 +25,7 @@ const updatePerfilInfo = async(req,res) => {
   try{
     //console.log(bd)
     let {id, descripcion} = req.body
-    let records = await pool.query(`update "Usuario" set "Descripcion"='`+descripcion+`' where "ID"='`+id+`'`)
+    let records = await bd.pool.query(`update "Usuario" set "Descripcion"='`+descripcion+`' where "ID"='`+id+`'`)
     res.json({
       status: 'success',
       msg: 'actualización exitosa'
