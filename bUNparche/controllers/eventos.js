@@ -17,15 +17,15 @@ const crearEvento = async (req,res) => {
         let sqlIns = ``
         if(presencial){
             if(bloficial){
-                sqlIns = `INSERT INTO "Evento" ( "Nombre", "Descripcion", "Imagen", "ID_TipoEvento", "Hora", "Duracion", "Presencial", "LugarOficial", "ID_lugarOficial", "ID_creador", "ID_grupo", "Recurrente" )`+
-                `VALUES( '`+asunto+`', '`+descripcion+`', null , '`+tipoEvento.ID+`' , '`+fecha+`' , '`+duracion+`:00:00' , '`+presencial+`' , '`+bloficial+`' , `+lugaroficial.ID+` , null , null , '`+recurrente+`'  )`
+                sqlIns = `INSERT INTO "Evento" ( "Nombre", "Descripcion", "ID_TipoEvento", "Hora", "Duracion", "Presencial", "LugarOficial", "ID_lugarOficial", "ID_creador", "ID_grupo", "Recurrente" )`+
+                `VALUES( '`+asunto+`', '`+descripcion+`', '`+tipoEvento.ID+`' , '`+fecha+`' , '`+duracion+`:00:00' , '`+presencial+`' , '`+bloficial+`' , `+lugaroficial.ID+` , null , null , '`+recurrente+`'  )`
             }else{
-                sqlIns = `INSERT INTO "Evento" ( "Nombre", "Descripcion", "Imagen", "ID_TipoEvento", "Hora", "Duracion", "Presencial", "LugarOficial", "NombreUbicacion", "CoordenadasUbicacion", "ID_creador", "ID_grupo", "Recurrente" )`+
-                `VALUES( '`+asunto+`', '`+descripcion+`', null , '`+tipoEvento.ID+`' , '`+fecha+`' , '`+duracion+`:00:00' , '`+presencial+`' , '`+bloficial+`' , '`+nombreubicacion+`' , null , null , null , '`+recurrente+`'  )`
+                sqlIns = `INSERT INTO "Evento" ( "Nombre", "Descripcion", "ID_TipoEvento", "Hora", "Duracion", "Presencial", "LugarOficial", "NombreUbicacion", "CoordenadasUbicacion", "ID_creador", "ID_grupo", "Recurrente" )`+
+                `VALUES( '`+asunto+`', '`+descripcion+`', '`+tipoEvento.ID+`' , '`+fecha+`' , '`+duracion+`:00:00' , '`+presencial+`' , '`+bloficial+`' , '`+nombreubicacion+`' , null , null , null , '`+recurrente+`'  )`
             }
         }else{
-            sqlIns = `INSERT INTO "Evento" ( "Nombre", "Descripcion", "Imagen", "ID_TipoEvento", "Hora", "Duracion", "Presencial", "ID_creador", "ID_grupo", "Recurrente" )`+
-                `VALUES( '`+asunto+`', '`+descripcion+`', null , '`+tipoEvento.ID+`' , '`+fecha+`' , '`+duracion+`:00:00' , '`+presencial+`' , null , null , '`+recurrente+`'  )`
+            sqlIns = `INSERT INTO "Evento" ( "Nombre", "Descripcion", "ID_TipoEvento", "Hora", "Duracion", "Presencial", "ID_creador", "ID_grupo", "Recurrente" )`+
+                `VALUES( '`+asunto+`', '`+descripcion+`', '`+tipoEvento.ID+`' , '`+fecha+`' , '`+duracion+`:00:00' , '`+presencial+`' , null , null , '`+recurrente+`'  )`
         }
         let records = await db.pool.query(sqlIns)
         res.json({
@@ -42,8 +42,8 @@ const crearEvento = async (req,res) => {
 }
 const listarEventos = async (req,res) => {
     try{
-        let records = await db.pool.query(' select * from "Evento" order by "Hora"::date')
-        console.log(records.rows)
+        let records = await db.pool.query(' select e."ID" , e."Nombre" , e."Imagen" , e."Hora" , e."Presencial" , e."LugarOficial" , e."NombreUbicacion" , l."Nombre" as "NombreLOficial" , l."Edificio" '+
+        ' from "Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID" order by "Hora"::date')
         res.json({
             message: 'Sip sirvio',
             data: records.rows
@@ -55,8 +55,8 @@ const listarEventos = async (req,res) => {
 const listarEventosByHour = async (req,res) => {
     try{
         let { inicio, fin } = req.body
-        let records = await db.pool.query(' select * from "Evento" where "Hora"::time between \''+inicio+'\' and \''+fin+'\' order by "Hora"::date')
-        console.log(records.rows)
+        let records = await db.pool.query(' select e."ID" , e."Nombre" , e."Imagen" , e."Hora" , e."Presencial" , e."LugarOficial" , e."NombreUbicacion" , l."Nombre" as "NombreLOficial" , l."Edificio" '+
+        ' from "Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID" where "Hora"::time between \''+inicio+'\' and \''+fin+'\' order by "Hora"::date')
         res.json({
             message: 'Sip sirvio',
             data: records.rows
