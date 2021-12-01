@@ -91,7 +91,7 @@ const googleSignIn = async(req, res= response)=>{//el response es para obtener e
             msg:'El token no se pudo verificar'
         })
     }
-    
+
 }
 
 
@@ -101,5 +101,7 @@ module.exports = {
     usuariosGet,
     usuariosPost,
     usuariosPut,
-    googleSignIn
+    googleSignIn,
+    getPerfilInfo,
+    updatePerfilInfo
 }
