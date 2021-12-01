@@ -22,10 +22,10 @@ const {Pool} = require('pg')
 //Aqui  configuro todo lo de la bd
 const pool = new Pool({
     //En donde esta mi server de postgres
-    host: 'localhost',
-    user: 'postgres',
-    password: process.env.PASS_BD,
-    database: 'db_UNparche',
+    host: 'ec2-18-206-255-71.compute-1.amazonaws.com',
+    user: 'unparcheuser',
+    password: 'masterkey',
+    database: 'databaseunparche',
     port: '5432'
 })
 
