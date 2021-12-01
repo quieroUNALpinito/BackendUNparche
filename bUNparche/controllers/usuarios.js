@@ -35,6 +35,7 @@ const usuariosPut = (req, res) => {
 }
 
 const googleSignIn = async(req, res= response)=>{//el response es para obtener el tipado ya que no usamos typescript
+    console.log(req.body)
     const {id_token} = req.body
     //En dado caso que falle
     try {
@@ -55,7 +56,7 @@ const googleSignIn = async(req, res= response)=>{//el response es para obtener e
                     const nuevoUsuario = await pool.query(`select * from "Usuario" where "Correo" = '${correo}'`)
                     const {ID, Nombres, Apellidos, Correo, Foto} = nuevoUsuario.rows[0]
                     const token = await generarJWT(ID, Nombres, Apellidos, Correo, Foto)
-                    return res.json({msg:"usuario registrado satisfactoriamente", token})
+                    return res.json({msg:"usuario registrado satisfactoriamente", token,ID:ID})
                     //return res.send( token)
                     //res.json({
                     //    msg:'todo felpi',
@@ -66,7 +67,7 @@ const googleSignIn = async(req, res= response)=>{//el response es para obtener e
                     const {ID, Nombres, Apellidos, Correo, Foto} = existeCorreo.rows[0]
                     console.log(existeCorreo.rows[0])
                     const token = await generarJWT(ID, Nombres, Apellidos, Correo, Foto)
-                    return res.json({msg:"el usuario ya se registro", token})
+                    return res.json({msg:"el usuario ya se registro", token,ID:ID})
                 }
 
             }
