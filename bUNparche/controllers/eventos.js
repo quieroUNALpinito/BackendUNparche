@@ -65,9 +65,23 @@ const listarEventosByHour = async (req,res) => {
         console.log(error)
     }
 }
+const verEvento = async (req,res) => {
+    try{
+        let { id } = req.body
+        let records = await db.pool.query(' select * from "Evento" where "ID" = '+id+'')
+        res.json({
+            message: 'Sip sirvio',
+            data: records.rows
+        })
+        console.log(records.rows)
+    } catch (error) {
+        console.log(error)
+    }
+}
 module.exports={
     tiposEvento,
     crearEvento,
     listarEventos,
-    listarEventosByHour
+    listarEventosByHour,
+    verEvento
 }
