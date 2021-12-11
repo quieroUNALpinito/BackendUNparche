@@ -2,7 +2,7 @@ const db = require('../database/config')
 
 const tiposEvento = async (req,res) => {
     try{
-        let records = await db.pool.query(' select * from "TipoEvento"')
+        let records = await db.pool.query('select * from "TipoEvento"')
         res.json({
             message: 'listado de tipos de evento',
             data: records.rows
@@ -11,6 +11,7 @@ const tiposEvento = async (req,res) => {
         console.log(error)
     }
 }
+
 const crearEvento = async (req,res) => {
     try {
         let { asunto, descripcion, tipoEvento, fecha,  duracion, presencial,  bloficial, lugaroficial, recurrente , nombreubicacion } = req.body
@@ -65,9 +66,38 @@ const listarEventosByHour = async (req,res) => {
         console.log(error)
     }
 }
+const listarEventosByType = async (req,res) => {
+    try{
+        let { tipos } = req.body
+        tiposToString = ''
+        if (tipos.length > 0) {
+          for (const x of tipos) {
+            tiposToString = tiposToString + '\'' + x.ID + '\', '
+          }
+          ids = tiposToString.slice(0,tiposToString.length-2)
+          let records = await db.pool.query('select e."ID" , e."Nombre" , e."Imagen" , e."Hora" , e."Presencial" , e."LugarOficial" , e."NombreUbicacion" , l."Nombre" as "NombreLOficial" , l."Edificio", ti."Nombre" as "TipoEvento"'+
+          'from ("Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID") left join "TipoEvento" ti on e."ID_TipoEvento" = ti."ID"'+
+          'where ti."ID" in ('+ids+') order by "Hora"::date')
+          res.json({
+              message: 'OK',
+              data: records.rows
+          })
+        } else {
+          let records = await db.pool.query('select e."ID" , e."Nombre" , e."Imagen" , e."Hora" , e."Presencial" , e."LugarOficial" , e."NombreUbicacion" , l."Nombre" as "NombreLOficial" , l."Edificio", ti."Nombre" as "TipoEvento"'+
+          'from ("Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID") left join "TipoEvento" ti on e."ID_TipoEvento" = ti."ID" order by "Hora"::date')
+          res.json({
+              message: 'OK',
+              data: records.rows
+          })
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
 module.exports={
     tiposEvento,
     crearEvento,
     listarEventos,
-    listarEventosByHour
+    listarEventosByHour,
+    listarEventosByType
 }
