@@ -68,7 +68,7 @@ const listarEventosByHour = async (req,res) => {
 const verEvento = async (req,res) => {
     try{
         let { id } = req.body
-        let records = await db.pool.query(' select * from "Evento" where "ID" = '+id+'')
+        let records = await db.pool.query(' select e.*,u."Nombres" nombrecreador,u."Apellidos" apellidocreador, g."Nombre" NombreGrupo from "Evento" e left join "Grupo" g on e."ID_grupo" = g."ID" left join "Usuario" u on e."ID_creador" = u."ID" where e."ID" = '+id+'')
         res.json({
             message: 'Sip sirvio',
             data: records.rows
