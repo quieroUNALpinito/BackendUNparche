@@ -65,9 +65,22 @@ const listarEventosByHour = async (req,res) => {
         console.log(error)
     }
 }
+const confirmarAsistencia = async (req,res) => {
+    try{
+        let { idEvento , idUsuario } = req.body
+        let records = await db.pool.query('INSERT INTO "AsistentesEvento" ( "ID_evento", "ID_usuario", "Notificaciones", "Confirmacion") VALUES( "'+idEvento+'" , "'+idUsuario+'" , true , true ) ')
+    }catch (error) {
+        console.log(error)
+    }
+}
+const consultarAsistenciaEvento = async (req,res) => {
+
+}
 module.exports={
     tiposEvento,
     crearEvento,
     listarEventos,
-    listarEventosByHour
+    listarEventosByHour,
+    confirmarAsistencia,
+    consultarAsistenciaEvento
 }

@@ -128,6 +128,18 @@ const googleSignIn = async(req, res= response)=>{//el response es para obtener e
 
 }
 
+const notifs = async (req,res) => {
+  try {
+    let { idUsuario } = req.body
+    let records = await pool.query('select e."ID" , e."Nombre" , e."Hora" from "Evento" e join "AsistentesEvento" ae on e."ID" = ae."ID_evento" where ae."ID_usuario" = '+idUsuario+' and ae."Notificaciones" = true and e."Hora" > now() ')
+    res.json({
+      status: 'success',
+      data: records.rows
+    })
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 
 
@@ -137,5 +149,6 @@ module.exports = {
     usuariosPut,
     googleSignIn,
     getPerfilInfo,
-    updatePerfilInfo
+    updatePerfilInfo,
+    notifs
 }
