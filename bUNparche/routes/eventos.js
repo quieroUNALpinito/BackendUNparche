@@ -9,5 +9,6 @@ router.post('/crearEvento', eventController.crearEvento)
 router.get('/listarEventos',eventController.listarEventos)
 router.post('/listarEventosByHour',eventController.listarEventosByHour)
 router.post('/verEvento',eventController.verEvento)
+router.post('/confirmarAsistenciaEvento',eventController.confirmarAsistencia)
 
 module.exports = router

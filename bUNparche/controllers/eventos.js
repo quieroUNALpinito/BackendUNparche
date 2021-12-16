@@ -73,15 +73,33 @@ const verEvento = async (req,res) => {
             message: 'Sip sirvio',
             data: records.rows
         })
-        console.log(records.rows)
     } catch (error) {
         console.log(error)
     }
 }
+const confirmarAsistencia = async (req,res) => {
+    try{
+        let { event , user } = req.body
+        console.log(event,user)
+        let record = await db.pool.query('insert into "AsistentesEvento" ("ID_evento", "ID_usuario" , "Notificaciones" , "Confirmacion") select '+event+' , '+user+' , true , true where not exists (select "ID_evento", "ID_usuario" from "AsistentesEvento" ae where "ID_evento" = '+event+' and "ID_usuario" = '+user+' limit 1)')
+        res.json({
+            status: 'success',
+            message: 'asistencia confirmada'
+        })
+    }catch (error) {
+        console.log(error)
+        res.json({
+            status: 'error',
+            message: error
+        })
+    }
+}
+
 module.exports={
     tiposEvento,
     crearEvento,
     listarEventos,
     listarEventosByHour,
-    verEvento
+    verEvento,
+    confirmarAsistencia
 }
