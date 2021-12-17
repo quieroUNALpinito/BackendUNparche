@@ -24,7 +24,20 @@ const lugarPorEdificio = async (req,res) => {
     }
 }
 
+const edificiosOfUbicacion = async (req,res) => {
+    try{
+        let records = await db.pool.query('select distinct on ("Edificio") "Edificio", "Coordenadas" from "Lugar"')
+        res.json({
+            message: 'listado de edificios oficiales',
+            data: records.rows
+        })
+    }catch (error){
+        console.log(error)
+    }
+}
+
 module.exports={
     edificiosOficiales,
-    lugarPorEdificio
+    lugarPorEdificio,
+    edificiosOfUbicacion
 }

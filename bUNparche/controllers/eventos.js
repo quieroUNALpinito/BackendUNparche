@@ -66,6 +66,19 @@ const listarEventosByHour = async (req,res) => {
         console.log(error)
     }
 }
+const listarEventosByLocation = async (req,res) => {
+    try{
+        let { edificio } = req.body
+        let records = await db.pool.query(' select e."ID" , e."Nombre" , e."Imagen" , e."Hora" , e."Presencial" , e."LugarOficial" , e."NombreUbicacion" , l."Nombre" as "NombreLOficial" , l."Edificio" '+
+        ' from "Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID" where l."Edificio" = \''+edificio+'\'')
+        res.json({
+            message: 'Sip sirvio',
+            data: records.rows
+        })
+      } catch (error) {
+          console.log(error)
+      }
+}
 const verEvento = async (req,res) => {
     try{
         let { id } = req.body
@@ -131,5 +144,6 @@ module.exports={
     listarEventosByHour,
     verEvento,
     confirmarAsistencia,
-    listarEventosByType
+    listarEventosByType,
+    listarEventosByLocation
 }

@@ -13,5 +13,6 @@ router.post('/listarEventosByHour',eventController.listarEventosByHour)
 router.post('/verEvento',eventController.verEvento)
 router.post('/confirmarAsistenciaEvento',eventController.confirmarAsistencia)
 router.post('/listarEventosByType',eventController.listarEventosByType)
+router.post('/listarEventosByLocation',eventController.listarEventosByLocation)
 
 module.exports = router

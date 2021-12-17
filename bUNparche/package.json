@@ -17,6 +17,7 @@
     "google-auth-library": "^7.10.2",
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.95.14",
+    "nodemailer": "^6.7.2",
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.11.0"
