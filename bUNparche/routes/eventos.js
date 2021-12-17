@@ -8,5 +8,6 @@ router.post('/crearEvento', eventController.crearEvento)
 
 router.get('/listarEventos',eventController.listarEventos)
 router.post('/listarEventosByHour',eventController.listarEventosByHour)
+router.post('/listarEventosByLocation',eventController.listarEventosByLocation)
 
 module.exports = router
