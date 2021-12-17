@@ -1,5 +1,5 @@
 const {Router} = require('express')
-const { updatePerfilInfo, getPerfilInfo, usuariosGet, usuariosPost, usuariosPut, googleSignIn} = require('../controllers/usuarios')
+const { updatePerfilInfo, getPerfilInfo, usuariosGet, usuariosPost, usuariosPut, googleSignIn , notifs } = require('../controllers/usuarios')
 const { validarCampos } = require('../middlewares/validar-campos')
 const {check} = require('express-validator')
 const { getUsers } = require('../database/config')
@@ -11,6 +11,7 @@ router.post('/', usuariosPost)
 router.put('/:id', usuariosPut)
 router.post('/updatePerfilInfo', updatePerfilInfo)
 router.post('/getPerfilInfo' , getPerfilInfo)
+router.post('/getNotif', notifs )
 
 //En el array va el listado de middlewares que validan los datos que se envian del frontend
 router.post('/google',[

@@ -123,6 +123,7 @@ const confirmarAsistencia = async (req,res) => {
         })
     }
 }
+
 module.exports={
     tiposEvento,
     crearEvento,
