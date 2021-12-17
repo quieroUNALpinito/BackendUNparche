@@ -18,11 +18,6 @@ const crearGrupo = async (res,req)=>{
         console.log(grCat[0])
 	})
 	.catch(err => res.status(400).json('error creando grupo'));
-    db.insert({
-        ID_usuario: id_creador,
-        ID_permiso: 1
-    }).into('PermisosUsuario')
-    .catch(err => res.status(400).json('error registrando permiso'))
 }
 
 const grCategoriasGet = async (res,req)=>{

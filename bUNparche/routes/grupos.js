@@ -5,6 +5,8 @@ const router = Router()
 
 router.get('/verGrupos', groupController.grCategoriasGet)
 router.post('/crearGrupo',groupController.crearGrupo)
+router.post('/listarMiembros',groupController.listarMiembros)
+router.post('/updatePermiso',groupController.updatePermiso)
 
 module.exports = router
 
