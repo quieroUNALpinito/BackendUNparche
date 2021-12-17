@@ -1,8 +1,8 @@
 const {db} = require("../database/configdb")
 
 const crearGrupo = async (res,req)=>{
-    const {nombre,descripcion,oficial,grCategoria} = req.body;
-    if(!nombre || !descripcion || !grCategoria){
+    const {nombre,descripcion,oficial,grCategoria,id_creador} = req.body;
+    if(!nombre || !descripcion || !grCategoria || !id_creador){
         return res.status(400).json('error en la submission del form');
     }
 
@@ -15,6 +15,7 @@ const crearGrupo = async (res,req)=>{
     .into('CategoriaGrupo')
 	.then(grCat => {
         res.json(grCat[0])
+        console.log(grCat[0])
 	})
 	.catch(err => res.status(400).json('error creando grupo'));
 }
