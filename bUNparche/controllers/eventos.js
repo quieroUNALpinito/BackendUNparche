@@ -122,11 +122,42 @@ const listarEventosByType = async (req,res) => {
 const confirmarAsistencia = async (req,res) => {
     try{
         let { event , user } = req.body
-        console.log(event,user)
         let record = await db.pool.query('insert into "AsistentesEvento" ("ID_evento", "ID_usuario" , "Notificaciones" , "Confirmacion") select '+event+' , '+user+' , true , true where not exists (select "ID_evento", "ID_usuario" from "AsistentesEvento" ae where "ID_evento" = '+event+' and "ID_usuario" = '+user+' limit 1)')
         res.json({
             status: 'success',
             message: 'asistencia confirmada'
+        })
+    } catch (error) {
+        console.log(error)
+        res.json({
+            status: 'error',
+            message: error
+        })
+    }
+}
+const desconfirmarAsistencia = async (req,res) => {
+    try{
+        let { event , user } = req.body
+        let record = await db.pool.query('DELETE FROM "AsistentesEvento" WHERE "ID_usuario"= '+user+' and "ID_evento"= '+event+' ')
+        res.json({
+            status: 'success',
+            message: 'asistencia desconfirmada'
+        })
+    } catch (error) {
+        console.log(error)
+        res.json({
+            status: 'error',
+            message: error
+        })
+    }
+}
+const consultarAsistenciaUsuarioEvento = async (req,res) => {
+    try{
+        let { event , user } = req.body
+        let record = await db.pool.query('SELECT "Confirmacion" FROM "AsistentesEvento" WHERE "ID_usuario"= '+user+' and "ID_evento"= '+event+' ')
+        res.json({
+            status: 'success',
+            data: record.rows
         })
     } catch (error) {
         console.log(error)
@@ -144,6 +175,8 @@ module.exports={
     listarEventosByHour,
     verEvento,
     confirmarAsistencia,
+    desconfirmarAsistencia,
+    consultarAsistenciaUsuarioEvento,
     listarEventosByType,
     listarEventosByLocation
 }
