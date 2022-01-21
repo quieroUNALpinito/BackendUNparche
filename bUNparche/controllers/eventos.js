@@ -44,7 +44,7 @@ const crearEvento = async (req,res) => {
 const listarEventos = async (req,res) => {
     try{
         let records = await db.pool.query(' select e."ID" , e."Nombre" , e."Imagen" , e."Hora" , e."Presencial" , e."LugarOficial" , e."NombreUbicacion" , l."Nombre" as "NombreLOficial" , l."Edificio" '+
-        ' from "Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID" order by "Hora"::date')
+        ' from "Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID" where "Hora"::date > current_date - 30 order by "Hora"::date')
         res.json({
             message: 'Sip sirvio',
             data: records.rows
@@ -70,7 +70,7 @@ const listarEventosByLocation = async (req,res) => {
     try{
         let { edificio } = req.body
         let records = await db.pool.query(' select e."ID" , e."Nombre" , e."Imagen" , e."Hora" , e."Presencial" , e."LugarOficial" , e."NombreUbicacion" , l."Nombre" as "NombreLOficial" , l."Edificio" '+
-        ' from "Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID" where l."Edificio" = \''+edificio+'\'')
+        ' from "Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID" where l."Edificio" = \''+edificio+'\' and e."Hora"::date > current_date - 30')
         res.json({
             message: 'Sip sirvio',
             data: records.rows
@@ -102,7 +102,7 @@ const listarEventosByType = async (req,res) => {
           ids = tiposToString.slice(0,tiposToString.length-2)
           let records = await db.pool.query('select e."ID" , e."Nombre" , e."Imagen" , e."Hora" , e."Presencial" , e."LugarOficial" , e."NombreUbicacion" , l."Nombre" as "NombreLOficial" , l."Edificio", ti."Nombre" as "TipoEvento"'+
           'from ("Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID") left join "TipoEvento" ti on e."ID_TipoEvento" = ti."ID"'+
-          'where ti."ID" in ('+ids+') order by "Hora"::date')
+          'where ti."ID" in ('+ids+') and e"Hora"::date > current_date - 30 order by "Hora"::date')
           res.json({
               message: 'OK',
               data: records.rows
@@ -167,6 +167,19 @@ const consultarAsistenciaUsuarioEvento = async (req,res) => {
         })
     }
 }
+const listarEventosByDate = async(req,res) => {
+    try{
+        let { inicio, fin } = req.body
+        let records = await db.pool.query(' select e."ID" , e."Nombre" , e."Imagen" , e."Hora" , e."Presencial" , e."LugarOficial" , e."NombreUbicacion" , l."Nombre" as "NombreLOficial" , l."Edificio" '+
+        ' from "Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID" where "Hora" between \''+inicio+'\' and \''+fin+'\' order by "Hora"::date')
+        res.json({
+            message: 'Sip sirvio',
+            data: records.rows
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 module.exports={
     tiposEvento,
@@ -178,5 +191,6 @@ module.exports={
     desconfirmarAsistencia,
     consultarAsistenciaUsuarioEvento,
     listarEventosByType,
-    listarEventosByLocation
+    listarEventosByLocation,
+    listarEventosByDate
 }
