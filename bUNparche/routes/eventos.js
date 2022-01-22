@@ -12,6 +12,8 @@ router.get('/listarEventos',eventController.listarEventos)
 router.post('/listarEventosByHour',eventController.listarEventosByHour)
 router.post('/verEvento',eventController.verEvento)
 router.post('/confirmarAsistenciaEvento',eventController.confirmarAsistencia)
+router.post('/desconfirmarAsistenciaEvento',eventController.desconfirmarAsistencia)
+router.post('/consultarAsistenciaUsuarioEvento',eventController.consultarAsistenciaUsuarioEvento)
 router.post('/listarEventosByType',eventController.listarEventosByType)
 router.post('/listarEventosByLocation',eventController.listarEventosByLocation)
 

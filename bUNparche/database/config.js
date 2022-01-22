@@ -22,9 +22,15 @@ const {Pool} = require('pg')
 //Aqui  configuro todo lo de la bd
 const pool = new Pool({
     //En donde esta mi server de postgres
+<<<<<<< HEAD
     host: 'db-unal.postgres.database.azure.com',
     user: 'AdminIS2',
     password: 'Masterkey1234',
+=======
+    host: 'localhost',
+    user: 'postgres',
+    password: 'masterkey',
+>>>>>>> 2accd7aea14ec0bbbeb0509c29fa43baadf63fca
     database: 'bd_UNparche',
     port: '5432'
 })
