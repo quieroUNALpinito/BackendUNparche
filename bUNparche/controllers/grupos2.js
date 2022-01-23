@@ -16,6 +16,7 @@ const crearGrupo = async (req,res) => {
 
     try {
     let { nombre, descripcion, oficial, categoriaGrupo, id_creador} = req.body
+    console.log('id_Creador: ',id_creador)
     const sqlIns = `INSERT INTO "Grupo" ("ID_CategoriaGrupo", "Nombre", "Descripcion", "Oficial")`+
             `VALUES ( '`+categoriaGrupo+`', '`+ nombre+`','`+descripcion+`',' `+oficial+`') RETURNING "ID";`
     const records = await db.pool.query(sqlIns)
@@ -69,10 +70,35 @@ const updatePermiso = async(req,res) => {
     }
   }
 
+const buscarGrupos = async (req, res) =>{
+  try {
+    console.log('hola')
+    let {categoria, id_categoria, id_user} = req.body
+    console.log(req.body)
+
+
+    let respuesta = await db.pool.query(` select "Grupo"."Nombre" as "NombreGrupo" , "Grupo"."Descripcion", "Grupo"."Oficial" ,"CategoriaGrupo"."Nombre" as "Nombre Categoria", "Usuario"."Nombres", "Usuario"."Apellidos"  from "Grupo" inner join "CategoriaGrupo"  ON "Grupo"."ID_CategoriaGrupo"  = "CategoriaGrupo"."ID"   inner join "UsuariosGrupo" on "Grupo"."ID"  = "UsuariosGrupo"."ID_grupo"  inner join "Usuario" on "Usuario"."ID"  = "UsuariosGrupo"."ID_usuario" where "Grupo"."Privado" = false and "UsuariosGrupo"."ID_usuario" != ${id_user} and "UsuariosGrupo"."ID_permiso" = 1 and "CategoriaGrupo"."Nombre" = '${categoria}'`)
+    
+    console.log(respuesta.rows)
+    if(respuesta.rows.length >0){
+      res.json(respuesta.rows)
+    }
+    else{
+      res.json({message: "No se encontraron grupos :("})
+    }
+
+    
+  } catch (error) {
+    console.log(error)
+    console.log('no se encontro nada')
+  }
+}
+
 module.exports={
     crearGrupo,
     grCategoriasGet,
     listarMiembros,
-    updatePermiso
+    updatePermiso,
+    buscarGrupos
 }
 
