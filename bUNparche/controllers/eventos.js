@@ -167,6 +167,22 @@ const consultarAsistenciaUsuarioEvento = async (req,res) => {
         })
     }
 }
+const consultarAsistentesEvento = async (req,res) => {
+    try{
+        let { event , user } = req.body
+        let record = await db.pool.query('SELECT  ae."ID" , ae."ID_usuario" , u."Nombres" , u."Apellidos" , ae."Confirmacion" FROM "AsistentesEvento" ae join "Usuario" u on ae."ID_usuario" = u."ID" WHERE "ID_usuario"!= '+user+' and "ID_evento"= '+event+' ')
+        res.json({
+            status: 'success',
+            data: record.rows
+        })
+    } catch (error) {
+        console.log(error)
+        res.json({
+            status: 'error',
+            message: error
+        })
+    }
+}
 
 module.exports={
     tiposEvento,
@@ -177,6 +193,7 @@ module.exports={
     confirmarAsistencia,
     desconfirmarAsistencia,
     consultarAsistenciaUsuarioEvento,
+    consultarAsistentesEvento,
     listarEventosByType,
     listarEventosByLocation
 }
