@@ -168,6 +168,33 @@ const consultarAsistenciaUsuarioEvento = async (req,res) => {
     }
 }
 
+const actualizarEvento = async (req,res) => {
+    try {
+        let {id, asunto, descripcion, tipoEvento, fecha,  duracion, presencial,  bloficial, edificio, lugaroficial, recurrente , nombreubicacion } = req.body
+        let sqlIns = ``
+        if(presencial){
+            if(bloficial){
+                sqlIns = `update "Evento" set "Nombre" = '`+asunto+`', "Descripcion" = '`+descripcion+`', "ID_TipoEvento" =  '`+tipoEvento.ID+`', "Hora" = '`+fecha+`', "Duracion" = '`+duracion+`:00:00', "Presencial" =  '`+presencial+`', "LugarOficial" = '`+bloficial+`' , "ID_lugarOficial" = `+lugaroficial.ID+`,   "Recurrente" =  '`+recurrente+`' where "ID" =  '`+id+`'`
+            }else{
+                sqlIns = `update "Evento" set  "Nombre" = '`+asunto+`', "Descripcion" = '`+descripcion+`', "ID_TipoEvento" = '`+tipoEvento.ID+`', "Hora" = '`+fecha+`', "Duracion" = '`+duracion+`:00:00', "Presencial" =  '`+presencial+`', "LugarOficial"  = '`+bloficial+`', "NombreUbicacion" = '`+nombreubicacion+`', "CoordenadasUbicacion" = null,  "Recurrente" ='`+recurrente+`' where "ID" =  '`+id+`'`
+            }
+        }else{
+            sqlIns = `update  "Evento" set  "Nombre" = '`+asunto+`', "Descripcion" = '`+descripcion+`',  "ID_TipoEvento" = '`+tipoEvento.ID+`', "Hora" = '`+fecha+`',  "Duracion" = '`+duracion+`:00:00', "Presencial" =  '`+presencial+`',  "Recurrente"  ='`+recurrente+`'  where "ID" =  '`+id+`'`
+        }
+        let records = await db.pool.query(sqlIns)
+        res.json({
+            status: 'success',
+            message: 'Evento actualizado'
+        })
+    } catch (error) {
+        console.log(error)
+        res.json({
+            status: 'error',
+            message: error
+        })
+    }
+}
+
 module.exports={
     tiposEvento,
     crearEvento,
@@ -178,5 +205,6 @@ module.exports={
     desconfirmarAsistencia,
     consultarAsistenciaUsuarioEvento,
     listarEventosByType,
-    listarEventosByLocation
+    listarEventosByLocation,
+    actualizarEvento
 }
