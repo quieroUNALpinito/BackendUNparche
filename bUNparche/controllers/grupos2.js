@@ -93,12 +93,40 @@ const buscarGrupos = async (req, res) =>{
     console.log('no se encontro nada')
   }
 }
+const verificarSolicitud = async (req,res) => {
+  try{
+      let { id_grupo, id_user } = req.body
+      let records = await db.pool.query(' select * from "UsuariosGrupo" where "ID_usuario" ='+id_user+' and "ID_grupo" = '+id_grupo+'')
+      res.json({
+          message: 'Sip sirvio',
+          data: records.rows
+      })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+const solicitarMembresia = async (req,res) => {
+  try{
+      let { id_grupo, id_user } = req.body
+      let records = await db.pool.query(' INSERT INTO "UsuariosGrupo" ( "ID_usuario", "ID_grupo" , "ID_permiso" ) VALUES ('+id_user+', '+id_grupo+', 3);')
+      res.json({
+        status: 'success',
+          message: 'Solicitud enviada',
+          data: records.rows
+      })
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 module.exports={
     crearGrupo,
     grCategoriasGet,
     listarMiembros,
     updatePermiso,
-    buscarGrupos
+    buscarGrupos,
+    verificarSolicitud ,
+    solicitarMembresia
 }
 
