@@ -77,7 +77,7 @@ const buscarGrupos = async (req, res) =>{
     console.log(req.body)
 
 
-    let respuesta = await db.pool.query(` select "Grupo"."Nombre" as "NombreGrupo" , "Grupo"."Descripcion", "Grupo"."Oficial" ,"CategoriaGrupo"."Nombre" as "Nombre Categoria", "Usuario"."Nombres", "Usuario"."Apellidos"  from "Grupo" inner join "CategoriaGrupo"  ON "Grupo"."ID_CategoriaGrupo"  = "CategoriaGrupo"."ID"   inner join "UsuariosGrupo" on "Grupo"."ID"  = "UsuariosGrupo"."ID_grupo"  inner join "Usuario" on "Usuario"."ID"  = "UsuariosGrupo"."ID_usuario" where "Grupo"."Privado" = false and "UsuariosGrupo"."ID_usuario" != ${id_user} and "UsuariosGrupo"."ID_permiso" = 1 and "CategoriaGrupo"."Nombre" = '${categoria}'`)
+    let respuesta = await db.pool.query(` select "Grupo"."ID" , "Grupo"."Nombre" as "NombreGrupo" , "Grupo"."Descripcion", "Grupo"."Oficial" ,"CategoriaGrupo"."Nombre" as "Nombre Categoria", "Usuario"."Nombres", "Usuario"."Apellidos"  from "Grupo" inner join "CategoriaGrupo"  ON "Grupo"."ID_CategoriaGrupo"  = "CategoriaGrupo"."ID"   inner join "UsuariosGrupo" on "Grupo"."ID"  = "UsuariosGrupo"."ID_grupo"  inner join "Usuario" on "Usuario"."ID"  = "UsuariosGrupo"."ID_usuario" where "Grupo"."Privado" = false and "UsuariosGrupo"."ID_usuario" != ${id_user} and "UsuariosGrupo"."ID_permiso" = 1 and "CategoriaGrupo"."Nombre" = '${categoria}'`)
     
     console.log(respuesta.rows)
     if(respuesta.rows.length >0){
@@ -102,6 +102,32 @@ const buscarGrupos = async (req, res) =>{
     console.log(error)
     console.log('no se encontro nada')
   }
+}
+const verificarSolicitud = async (req,res) => {
+  try{
+      let { id_grupo, id_user } = req.body
+      let records = await db.pool.query(' select * from "UsuariosGrupo" where "ID_usuario" ='+id_user+' and "ID_grupo" = '+id_grupo+'')
+      res.json({
+          message: 'Sip sirvio',
+          data: records.rows
+      })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+const solicitarMembresia = async (req,res) => {
+  try{
+      let { id_grupo, id_user } = req.body
+      let records = await db.pool.query(' INSERT INTO "UsuariosGrupo" ( "ID_usuario", "ID_grupo" , "ID_permiso" ) VALUES ('+id_user+', '+id_grupo+', 3);')
+      res.json({
+        status: 'success',
+          message: 'Solicitud enviada',
+          data: records.rows
+      })
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 const buscarGruposPorNombre = async (req, res) =>{
@@ -138,6 +164,8 @@ module.exports={
     listarMiembros,
     updatePermiso,
     buscarGrupos,
-    buscarGruposPorNombre
+    buscarGruposPorNombre,
+    verificarSolicitud ,
+    solicitarMembresia
 }
 
