@@ -420,6 +420,19 @@ const listarEventosAnteriores = async(req,res)=>{
     }
 }
 
+const actualizarNotificaciones = async(req,res)=>{
+    try {
+        let {evento,usuario,notificaciones}=req.body
+        let records = await db.pool.query('UPDATE public."AsistentesEvento" SET "ID_evento"='+evento+', "ID_usuario"='+usuario+', "Notificaciones"='+notificaciones+'  WHERE "ID_evento"='+evento+' and "ID_usuario"='+usuario+'')
+        res.json({
+            message: 'notificacion actualizada',
+            status: 'success'
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 module.exports={
     tiposEvento,
     gruposDeUsuario,
@@ -436,5 +449,6 @@ module.exports={
     listarEventosByLocation,
     actualizarEvento,
     listarEventosByDate,
-    listarEventosAnteriores
+    listarEventosAnteriores,
+    actualizarNotificaciones
 }
