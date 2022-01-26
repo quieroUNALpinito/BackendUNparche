@@ -81,6 +81,16 @@ const buscarGrupos = async (req, res) =>{
     
     console.log(respuesta.rows)
     if(respuesta.rows.length >0){
+      for (let i = 0; i < respuesta.rows.length; i++) {
+        console.log(respuesta.rows[i])
+        if(respuesta.rows[i].Oficial === true){
+          respuesta.rows[i].Oficial = 'Si'
+        }
+        else{
+          respuesta.rows[i].Oficial = 'No'
+        }
+        
+      }
       res.json(respuesta.rows)
     }
     else{
@@ -94,11 +104,40 @@ const buscarGrupos = async (req, res) =>{
   }
 }
 
+const buscarGruposPorNombre = async (req, res) =>{
+  try {
+    console.log('hola')
+    let {nombreGrupo, id_user} = req.body
+
+    let respuesta = await db.pool.query(`select "Grupo"."Nombre" as "Nombre Grupo" , "Grupo"."Descripcion", "Grupo"."Oficial" ,"CategoriaGrupo"."Nombre" as "NombreCategoria", "Usuario"."Nombres", "Usuario"."Apellidos"  from "Grupo" inner join "CategoriaGrupo"  ON "Grupo"."ID_CategoriaGrupo"  = "CategoriaGrupo"."ID"   inner join "UsuariosGrupo" on "Grupo"."ID"  = "UsuariosGrupo"."ID_grupo"  inner join "Usuario" on "Usuario"."ID"  = "UsuariosGrupo"."ID_usuario" where "Grupo"."Privado" = false  and "UsuariosGrupo"."ID_usuario" != ${id_user} and "UsuariosGrupo"."ID_permiso" =1 and lower("Grupo"."Nombre")  like lower('%${nombreGrupo}%')`)
+    console.log(respuesta)
+    if(respuesta.rows.length >0){
+      for (let i = 0; i < respuesta.rows.length; i++) {
+        console.log(respuesta.rows[i])
+        if(respuesta.rows[i].Oficial === true){
+          respuesta.rows[i].Oficial = 'Si'
+        }
+        else{
+          respuesta.rows[i].Oficial = 'No'
+        }
+        
+      }
+      res.json(respuesta.rows)
+    }
+    else{
+      res.json({message: "No se encontraron grupos :("})
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 module.exports={
     crearGrupo,
     grCategoriasGet,
     listarMiembros,
     updatePermiso,
-    buscarGrupos
+    buscarGrupos,
+    buscarGruposPorNombre
 }
 
