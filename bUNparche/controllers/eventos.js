@@ -67,19 +67,19 @@ const listarEventos = async (req,res) => {
           ids_grupos = gruposToString.slice(0,gruposToString.length-2)
           if(privado){
             records = await db.pool.query(`select e."ID" , e."Nombre" , e."Imagen" , e."Hora" , e."Presencial" , e."LugarOficial" , e."NombreUbicacion" , l."Nombre" as "NombreLOficial" , l."Edificio" `+
-            `from "Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID" where e."Privado" = true and (e."ID_creador" = `+usuario+` or e."ID_grupo" in (`+ids_grupos+`)) `+
+            `from "Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID" where e."Privado" = true and e."Hora"::date > current_date - 30 and (e."ID_creador" = `+usuario+` or e."ID_grupo" in (`+ids_grupos+`)) `+
             `order by "Hora"::date`)
           }else{
             records = await db.pool.query(`select e."ID" , e."Nombre" , e."Imagen" , e."Hora" , e."Presencial" , e."LugarOficial" , e."NombreUbicacion" , l."Nombre" as "NombreLOficial" , l."Edificio" `+
-            `from "Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID" where e."Privado" = false order by "Hora"::date`)
+            `from "Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID" where e."Privado" = false and e."Hora"::date > current_date - 30 order by "Hora"::date`)
           }
         }else{
           if(privado){
             records = await db.pool.query(`select e."ID" , e."Nombre" , e."Imagen" , e."Hora" , e."Presencial" , e."LugarOficial" , e."NombreUbicacion" , l."Nombre" as "NombreLOficial" , l."Edificio" `+
-            `from "Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID" where e."Privado" = true and e."ID_creador" = `+usuario+` order by "Hora"::date`)
+            `from "Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID" where e."Privado" = true and e."Hora"::date > current_date - 30 and e."ID_creador" = `+usuario+` order by "Hora"::date`)
           }else{
             records = await db.pool.query(`select e."ID" , e."Nombre" , e."Imagen" , e."Hora" , e."Presencial" , e."LugarOficial" , e."NombreUbicacion" , l."Nombre" as "NombreLOficial" , l."Edificio" `+
-            `from "Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID" where e."Privado" = false order by "Hora"::date`)
+            `from "Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID" where e."Privado" = false and e."Hora"::date > current_date - 30 order by "Hora"::date`)
           }
         }
         res.json({
@@ -136,18 +136,18 @@ const listarEventosByLocation = async (req,res) => {
           ids_grupos = gruposToString.slice(0,gruposToString.length-2)
           if(privado){
             records = await db.pool.query(`select e."ID" , e."Nombre" , e."Imagen" , e."Hora" , e."Presencial" , e."LugarOficial" , e."NombreUbicacion" , l."Nombre" as "NombreLOficial" , l."Edificio" `+
-            `from "Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID" where e."Privado" = true and (e."ID_creador" = `+usuario+` or e."ID_grupo" in (`+ids_grupos+`)) and l."Edificio" = '`+edificio+`'`)
+            `from "Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID" where e."Privado" = true and e."Hora"::date > current_date - 30 and (e."ID_creador" = `+usuario+` or e."ID_grupo" in (`+ids_grupos+`)) and l."Edificio" = '`+edificio+`'`)
           }else{
             records = await db.pool.query(`select e."ID" , e."Nombre" , e."Imagen" , e."Hora" , e."Presencial" , e."LugarOficial" , e."NombreUbicacion" , l."Nombre" as "NombreLOficial" , l."Edificio" `+
-            `from "Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID" where e."Privado" = false and l."Edificio" = '`+edificio+`'`)
+            `from "Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID" where e."Privado" = false and e."Hora"::date > current_date - 30 and l."Edificio" = '`+edificio+`'`)
           }
         }else{
           if(privado){
             records = await db.pool.query(`select e."ID" , e."Nombre" , e."Imagen" , e."Hora" , e."Presencial" , e."LugarOficial" , e."NombreUbicacion" , l."Nombre" as "NombreLOficial" , l."Edificio" `+
-            `from "Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID" where e."Privado" = true and e."ID_creador" = `+usuario+` and l."Edificio" = '`+edificio+`'`)
+            `from "Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID" where e."Privado" = true and e."Hora"::date > current_date - 30 and e."ID_creador" = `+usuario+` and l."Edificio" = '`+edificio+`'`)
           }else{
             records = await db.pool.query(`select e."ID" , e."Nombre" , e."Imagen" , e."Hora" , e."Presencial" , e."LugarOficial" , e."NombreUbicacion" , l."Nombre" as "NombreLOficial" , l."Edificio" `+
-            `from "Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID" where e."Privado" = false and l."Edificio" = '`+edificio+`'`)
+            `from "Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID" where e."Privado" = false and e."Hora"::date > current_date - 30 and l."Edificio" = '`+edificio+`'`)
           }
         }
         res.json({
@@ -189,10 +189,10 @@ const listarEventosByType = async (req,res) => {
               ids = tiposToString.slice(0,tiposToString.length-2)
               records = await db.pool.query(`select e."ID" , e."Nombre" , e."Imagen" , e."Hora" , e."Presencial" , e."LugarOficial" , e."NombreUbicacion" , l."Nombre" as "NombreLOficial" , l."Edificio" `+
               `from ("Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID") left join "TipoEvento" ti on e."ID_TipoEvento" = ti."ID" `+
-              `where e."Privado" = true and (e."ID_creador" = `+usuario+` or e."ID_grupo" in (`+ids_grupos+`)) and ti."ID" in (`+ids+`) order by "Hora"::date`)
+              `where e."Privado" = true and (e."ID_creador" = `+usuario+` or e."ID_grupo" in (`+ids_grupos+`)) and e."Hora"::date > current_date - 30 and ti."ID" in (`+ids+`) order by "Hora"::date`)
             } else {
               records = await db.pool.query(`select e."ID" , e."Nombre" , e."Imagen" , e."Hora" , e."Presencial" , e."LugarOficial" , e."NombreUbicacion" , l."Nombre" as "NombreLOficial" , l."Edificio" `+
-              `from ("Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID") left join "TipoEvento" ti on e."ID_TipoEvento" = ti."ID" where e."Privado" = true and (e."ID_creador" = `+usuario+` or e."ID_grupo" in (`+ids_grupos+`)) order by "Hora"::date`)
+              `from ("Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID") left join "TipoEvento" ti on e."ID_TipoEvento" = ti."ID" where e."Privado" = true and e."Hora"::date > current_date - 30 and (e."ID_creador" = `+usuario+` or e."ID_grupo" in (`+ids_grupos+`)) order by "Hora"::date`)
             }
           }else{
             if (tipos.length > 0) {
@@ -202,10 +202,10 @@ const listarEventosByType = async (req,res) => {
               ids = tiposToString.slice(0,tiposToString.length-2)
               records = await db.pool.query(`select e."ID" , e."Nombre" , e."Imagen" , e."Hora" , e."Presencial" , e."LugarOficial" , e."NombreUbicacion" , l."Nombre" as "NombreLOficial" , l."Edificio" `+
               `from ("Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID") left join "TipoEvento" ti on e."ID_TipoEvento" = ti."ID" `+
-              `where e."Privado" = false and ti."ID" in (`+ids+`) order by "Hora"::date`)
+              `where e."Privado" = false and e."Hora"::date > current_date - 30 and ti."ID" in (`+ids+`) order by "Hora"::date`)
             } else {
               records = await db.pool.query(`select e."ID" , e."Nombre" , e."Imagen" , e."Hora" , e."Presencial" , e."LugarOficial" , e."NombreUbicacion" , l."Nombre" as "NombreLOficial" , l."Edificio" `+
-              `from ("Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID") left join "TipoEvento" ti on e."ID_TipoEvento" = ti."ID" where e."Privado" = false order by "Hora"::date`)
+              `from ("Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID") left join "TipoEvento" ti on e."ID_TipoEvento" = ti."ID" where e."Privado" = false and e."Hora"::date > current_date - 30 order by "Hora"::date`)
             }
           }
         }else{
@@ -217,10 +217,10 @@ const listarEventosByType = async (req,res) => {
               ids = tiposToString.slice(0,tiposToString.length-2)
               records = await db.pool.query(`select e."ID" , e."Nombre" , e."Imagen" , e."Hora" , e."Presencial" , e."LugarOficial" , e."NombreUbicacion" , l."Nombre" as "NombreLOficial" , l."Edificio" `+
               `from ("Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID") left join "TipoEvento" ti on e."ID_TipoEvento" = ti."ID" `+
-              `where e."Privado" = true and e."ID_creador" = `+usuario+` and ti."ID" in (`+ids+`) order by "Hora"::date`)
+              `where e."Privado" = true and e."ID_creador" = `+usuario+` and e."Hora"::date > current_date - 30 and ti."ID" in (`+ids+`) order by "Hora"::date`)
             } else {
               records = await db.pool.query(`select e."ID" , e."Nombre" , e."Imagen" , e."Hora" , e."Presencial" , e."LugarOficial" , e."NombreUbicacion" , l."Nombre" as "NombreLOficial" , l."Edificio" `+
-              `from ("Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID") left join "TipoEvento" ti on e."ID_TipoEvento" = ti."ID" where e."Privado" = true and e."ID_creador" = `+usuario+` order by "Hora"::date`)
+              `from ("Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID") left join "TipoEvento" ti on e."ID_TipoEvento" = ti."ID" where e."Privado" = true and e."Hora"::date > current_date - 30 and e."ID_creador" = `+usuario+` order by "Hora"::date`)
             }
           }else{
             if (tipos.length > 0) {
@@ -230,10 +230,10 @@ const listarEventosByType = async (req,res) => {
               ids = tiposToString.slice(0,tiposToString.length-2)
               records = await db.pool.query(`select e."ID" , e."Nombre" , e."Imagen" , e."Hora" , e."Presencial" , e."LugarOficial" , e."NombreUbicacion" , l."Nombre" as "NombreLOficial" , l."Edificio" `+
               `from ("Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID") left join "TipoEvento" ti on e."ID_TipoEvento" = ti."ID" `+
-              `where e."Privado" = false and ti."ID" in (`+ids+`) order by "Hora"::date`)
+              `where e."Privado" = false and e."Hora"::date > current_date - 30 and ti."ID" in (`+ids+`) order by "Hora"::date`)
             } else {
               records = await db.pool.query(`select e."ID" , e."Nombre" , e."Imagen" , e."Hora" , e."Presencial" , e."LugarOficial" , e."NombreUbicacion" , l."Nombre" as "NombreLOficial" , l."Edificio" `+
-              `from ("Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID") left join "TipoEvento" ti on e."ID_TipoEvento" = ti."ID" where e."Privado" = false order by "Hora"::date`)
+              `from ("Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID") left join "TipoEvento" ti on e."ID_TipoEvento" = ti."ID" where e."Privado" = false and e."Hora"::date > current_date - 30 order by "Hora"::date`)
             }
           }
         }
@@ -264,10 +264,10 @@ const listarEventosByGroup = async (req,res) => {
               ids = gruposSeleccionadosToString.slice(0,gruposSeleccionadosToString.length-2)
               records = await db.pool.query(`select e."ID" , e."Nombre" , e."Imagen" , e."Hora" , e."Presencial" , e."LugarOficial" , e."NombreUbicacion" , l."Nombre" as "NombreLOficial" , l."Edificio" `+
               `from "Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID" `+
-              `where e."Privado" = true and e."ID_grupo" in (`+ids+`) order by "Hora"::date`)
+              `where e."Privado" = true and e."Hora"::date > current_date - 30 and e."ID_grupo" in (`+ids+`) order by "Hora"::date`)
             } else {
               records = await db.pool.query(`select e."ID" , e."Nombre" , e."Imagen" , e."Hora" , e."Presencial" , e."LugarOficial" , e."NombreUbicacion" , l."Nombre" as "NombreLOficial" , l."Edificio" `+
-              `from "Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID" where e."Privado" = true and (e."ID_creador" = `+usuario+` or e."ID_grupo" in (`+ids_grupos+`)) order by "Hora"::date`)
+              `from "Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID" where e."Privado" = true and (e."ID_creador" = `+usuario+` or e."ID_grupo" in (`+ids_grupos+`)) and e."Hora"::date > current_date - 30 order by "Hora"::date`)
             }
           }else{
             if (gruposSeleccionados.length > 0) {
@@ -277,19 +277,19 @@ const listarEventosByGroup = async (req,res) => {
               ids = gruposSeleccionadosToString.slice(0,gruposSeleccionadosToString.length-2)
               records = await db.pool.query(`select e."ID" , e."Nombre" , e."Imagen" , e."Hora" , e."Presencial" , e."LugarOficial" , e."NombreUbicacion" , l."Nombre" as "NombreLOficial" , l."Edificio" `+
               `from "Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID" `+
-              `where e."Privado" = false and e."ID_grupo" in (`+ids+`) order by "Hora"::date`)
+              `where e."Privado" = false and e."ID_grupo" in (`+ids+`) and e."Hora"::date > current_date - 30 order by "Hora"::date`)
             } else {
               records = await db.pool.query(`select e."ID" , e."Nombre" , e."Imagen" , e."Hora" , e."Presencial" , e."LugarOficial" , e."NombreUbicacion" , l."Nombre" as "NombreLOficial" , l."Edificio" `+
-              `from "Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID" where e."Privado" = false order by "Hora"::date`)
+              `from "Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID" where e."Privado" = false and e."Hora"::date > current_date - 30 order by "Hora"::date`)
             }
           }
         }else{
           if(privado){
             records = await db.pool.query(`select e."ID" , e."Nombre" , e."Imagen" , e."Hora" , e."Presencial" , e."LugarOficial" , e."NombreUbicacion" , l."Nombre" as "NombreLOficial" , l."Edificio" `+
-            `from "Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID" where e."Privado" = true and e."ID_creador" = `+usuario+` order by "Hora"::date`)
+            `from "Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID" where e."Privado" = true and e."ID_creador" = `+usuario+` and e."Hora"::date > current_date - 30 order by "Hora"::date`)
           }else{
             records = await db.pool.query(`select e."ID" , e."Nombre" , e."Imagen" , e."Hora" , e."Presencial" , e."LugarOficial" , e."NombreUbicacion" , l."Nombre" as "NombreLOficial" , l."Edificio" `+
-            `from "Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID" where e."Privado" = false order by "Hora"::date`)
+            `from "Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID" where e."Privado" = false and e."Hora"::date > current_date - 30 order by "Hora"::date`)
           }
         }
         res.json({
@@ -348,6 +348,19 @@ const consultarAsistenciaUsuarioEvento = async (req,res) => {
         })
     }
 }
+const listarEventosByDate = async(req,res) => {
+    try{
+        let { inicio, fin } = req.body
+        let records = await db.pool.query(' select e."ID" , e."Nombre" , e."Imagen" , e."Hora" , e."Presencial" , e."LugarOficial" , e."NombreUbicacion" , l."Nombre" as "NombreLOficial" , l."Edificio" '+
+        ' from "Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID" where "Hora" between \''+inicio+'\' and \''+fin+'\' order by "Hora"::date')
+        res.json({
+            message: 'Sip sirvio',
+            data: records.rows
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 const actualizarEvento = async (req,res) => {
     try {
@@ -389,5 +402,6 @@ module.exports={
     listarEventosByType,
     listarEventosByGroup,
     listarEventosByLocation,
-    actualizarEvento
+    actualizarEvento,
+    listarEventosByDate
 }

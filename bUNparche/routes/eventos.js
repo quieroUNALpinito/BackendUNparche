@@ -17,6 +17,7 @@ router.post('/desconfirmarAsistenciaEvento',eventController.desconfirmarAsistenc
 router.post('/consultarAsistenciaUsuarioEvento',eventController.consultarAsistenciaUsuarioEvento)
 router.post('/listarEventosByType',eventController.listarEventosByType)
 router.post('/listarEventosByGroup',eventController.listarEventosByGroup)
+router.post('/listarEventosByDate',eventController.listarEventosByDate)
 router.post('/listarEventosByLocation',eventController.listarEventosByLocation)
 router.post('/actualizarEvento', eventController.actualizarEvento)
 
