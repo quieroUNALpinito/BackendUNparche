@@ -9,6 +9,7 @@ router.post('/listarMiembros',groupController.listarMiembros)
 router.post('/updatePermiso',groupController.updatePermiso)
 router.post('/buscarGrupos', groupController.buscarGrupos)
 router.post('/buscarGruposPorNombre', groupController.buscarGruposPorNombre)
+router.get('/buscarMisGrupos', groupController.buscarMisGrupos)
 
 module.exports = router
 
