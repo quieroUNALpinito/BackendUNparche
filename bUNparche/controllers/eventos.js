@@ -170,7 +170,7 @@ const consultarAsistenciaUsuarioEvento = async (req,res) => {
 
 const actualizarEvento = async (req,res) => {
     try {
-        let {id, asunto, descripcion, tipoEvento, fecha,  duracion, presencial,  bloficial, edificio, lugaroficial, recurrente , nombreubicacion } = req.body
+        let {id, asunto, descripcion, tipoEvento, fecha,  duracion, presencial,  bloficial, lugaroficial, recurrente , nombreubicacion } = req.body
         let sqlIns = ``
         if(presencial){
             if(bloficial){
