@@ -21,5 +21,6 @@ router.post('/listarEventosByGroup',eventController.listarEventosByGroup)
 router.post('/listarEventosByDate',eventController.listarEventosByDate)
 router.post('/listarEventosByLocation',eventController.listarEventosByLocation)
 router.post('/actualizarEvento', eventController.actualizarEvento)
+router.post('/listarEventosAnteriores',eventController.listarEventosAnteriores)
 
 module.exports = router

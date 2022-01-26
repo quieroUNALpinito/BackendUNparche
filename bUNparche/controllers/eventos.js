@@ -407,6 +407,19 @@ const consultarAsistentesEvento = async (req,res) => {
     }
 }
 
+const listarEventosAnteriores = async(req,res)=>{
+    try{
+        let{id}=req.body
+        let records = await db.pool.query('select e."ID" , e."Nombre" , e."Imagen" , e."Hora" , e."Presencial" , e."LugarOficial" , e."NombreUbicacion" , l."Nombre" as "NombreLOficial" , l."Edificio" from "Evento" e left join "Lugar" l on e."ID_lugarOficial" = l."ID" left join "AsistentesEvento" ae on e."ID" = ae."ID_evento" where ae."ID_usuario"='+id+' and "Hora"::date < current_date')
+        res.json({
+            message: 'Sip sirvio',
+            data: records.rows
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 module.exports={
     tiposEvento,
     gruposDeUsuario,
@@ -422,5 +435,6 @@ module.exports={
     listarEventosByGroup,
     listarEventosByLocation,
     actualizarEvento,
-    listarEventosByDate
+    listarEventosByDate,
+    listarEventosAnteriores
 }
