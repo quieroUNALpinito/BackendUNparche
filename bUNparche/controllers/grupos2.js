@@ -166,7 +166,6 @@ const updateGrupos = async(req,res) => {
       let {group, categoria} = req.body
       let {ID, Privado, NombreGrupo, Descripcion} = group
       Privado = Privado === 'Privado'
-      console.log('holaa')
       let records = await db.pool.query(`update "Grupo" set "Nombre" = '${NombreGrupo}',
           "Privado" = '${Privado}', "Descripcion" = '${Descripcion}', "ID_CategoriaGrupo" = '${categoria}'
           where "ID" = ${ID}`)
@@ -183,6 +182,32 @@ const updateGrupos = async(req,res) => {
     }
   }
 
+const buscarMisSolicitudes = async (req, res) =>{
+  try {
+    console.log('Fetch groups')
+    let {id_user} = req.body
+
+    let respuesta = await db.pool.query(`With "MisGrupos" as (select "Grupo"."ID","Grupo"."Nombre"
+	from "Grupo" inner join "UsuariosGrupo" on "Grupo"."ID"  = "UsuariosGrupo"."ID_grupo"
+				inner join "Usuario" on "Usuario"."ID"  = "UsuariosGrupo"."ID_usuario"
+			where "UsuariosGrupo"."ID_usuario" = ${id_user} and "UsuariosGrupo"."ID_permiso" = 1)
+
+select "MisGrupos"."Nombre" as "NombreGrupo" , "Usuario"."Nombres", "Usuario"."Apellidos"
+	from "MisGrupos" inner join "UsuariosGrupo" on "MisGrupos"."ID"  = "UsuariosGrupo"."ID_grupo"
+	inner join "Usuario" on "Usuario"."ID"  = "UsuariosGrupo"."ID_usuario"
+	where "UsuariosGrupo"."ID_permiso" = 3`)
+    console.log(respuesta)
+    if(respuesta.rows.length >0){
+      res.json(respuesta.rows)
+    }
+    else{
+      res.json({message: "No se encontraron solicitudes :("})
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 module.exports={
     crearGrupo,
     grCategoriasGet,
@@ -191,6 +216,7 @@ module.exports={
     buscarGrupos,
     buscarMisGrupos,
     buscarGruposPorNombre,
-    updateGrupos
+    updateGrupos,
+    buscarMisSolicitudes
 }
 

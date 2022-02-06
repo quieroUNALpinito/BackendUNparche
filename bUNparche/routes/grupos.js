@@ -11,6 +11,7 @@ router.post('/buscarGrupos', groupController.buscarGrupos)
 router.post('/buscarGruposPorNombre', groupController.buscarGruposPorNombre)
 router.post('/buscarMisGrupos', groupController.buscarMisGrupos)
 router.post('/updateGrupos', groupController.updateGrupos)
+router.post('/buscarMisSolicitudes', groupController.buscarMisSolicitudes)
 
 module.exports = router
 
