@@ -55,8 +55,8 @@ const listarMiembros = async (req,res) => {
 const updatePermiso = async(req,res) => {
     try{
       let {permiso,grupo,usuario} = req.body
-      let records = await db.pool.query(`update "UsuariosGrupo" set "ID_permiso" =
-         `+permiso+` where "ID_grupo" = `+grupo+`AND "ID_usuario" = `+usuario+``)
+      let records = await db.pool.query(`update "UsuariosGrupo" set "ID_permiso" = ${permiso}
+where "ID_grupo" = ${grupo} and "ID_usuario" = ${usuario}`)
       res.json({
         status: 'success',
         msg: 'actualización exitosa'
@@ -72,7 +72,6 @@ const updatePermiso = async(req,res) => {
 
 const buscarGrupos = async (req, res) =>{
   try {
-    console.log('hola')
     let {categoria, id_categoria, id_user} = req.body
     console.log(req.body)
 
@@ -192,7 +191,7 @@ const buscarMisSolicitudes = async (req, res) =>{
 				inner join "Usuario" on "Usuario"."ID"  = "UsuariosGrupo"."ID_usuario"
 			where "UsuariosGrupo"."ID_usuario" = ${id_user} and "UsuariosGrupo"."ID_permiso" = 1)
 
-select "MisGrupos"."Nombre" as "NombreGrupo" , "Usuario"."Nombres", "Usuario"."Apellidos"
+select "MisGrupos"."ID" as "IDgrupo", "MisGrupos"."Nombre" as "NombreGrupo" , "Usuario"."Nombres", "Usuario"."Apellidos","Usuario"."ID"
 	from "MisGrupos" inner join "UsuariosGrupo" on "MisGrupos"."ID"  = "UsuariosGrupo"."ID_grupo"
 	inner join "Usuario" on "Usuario"."ID"  = "UsuariosGrupo"."ID_usuario"
 	where "UsuariosGrupo"."ID_permiso" = 3`)
