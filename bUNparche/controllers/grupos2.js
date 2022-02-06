@@ -55,8 +55,8 @@ const listarMiembros = async (req,res) => {
 const updatePermiso = async(req,res) => {
     try{
       let {permiso,grupo,usuario} = req.body
-      let records = await db.pool.query(`update "UsuariosGrupo" set "ID_permiso" =
-         `+permiso+` where "ID_grupo" = `+grupo+`AND "ID_usuario" = `+usuario+``)
+      let records = await db.pool.query(`update "UsuariosGrupo" set "ID_permiso" = ${permiso}
+where "ID_grupo" = ${grupo} and "ID_usuario" = ${usuario}`)
       res.json({
         status: 'success',
         msg: 'actualización exitosa'
@@ -72,7 +72,6 @@ const updatePermiso = async(req,res) => {
 
 const buscarGrupos = async (req, res) =>{
   try {
-    console.log('hola')
     let {categoria, id_categoria, id_user} = req.body
     console.log(req.body)
 
@@ -158,6 +157,82 @@ const buscarGruposPorNombre = async (req, res) =>{
   }
 }
 
+const buscarMisGrupos = async (req, res) =>{
+  try {
+    console.log('Fetch groups')
+    let {id_user} = req.body
+
+    let respuesta = await db.pool.query(`select "Grupo"."ID", "Grupo"."Nombre" as "NombreGrupo" , "Grupo"."Descripcion", "Grupo"."Oficial","Grupo"."Privado","CategoriaGrupo"."Nombre" as "NombreCategoria", "Usuario"."Nombres", "Usuario"."Apellidos"  from "Grupo" inner join "CategoriaGrupo"  ON "Grupo"."ID_CategoriaGrupo"  = "CategoriaGrupo"."ID"   inner join "UsuariosGrupo" on "Grupo"."ID"  = "UsuariosGrupo"."ID_grupo"  inner join "Usuario" on "Usuario"."ID"  = "UsuariosGrupo"."ID_usuario" where "Grupo"."Privado" = false  and "UsuariosGrupo"."ID_usuario" = ${id_user} and "UsuariosGrupo"."ID_permiso" = 1`)
+    console.log(respuesta)
+    if(respuesta.rows.length >0){
+      for (let i = 0; i < respuesta.rows.length; i++) {
+        console.log(respuesta.rows[i])
+        if(respuesta.rows[i].Oficial === true){
+          respuesta.rows[i].Oficial = 'Si'
+        }
+        else{
+          respuesta.rows[i].Oficial = 'No'
+        }
+        (respuesta.rows[i].Privado)? respuesta.rows[i].Privado = 'Privado' : respuesta.rows[i].Privado = 'Público'
+        
+      }
+      res.json(respuesta.rows)
+    }
+    else{
+      res.json({message: "No se encontraron grupos :("})
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+const updateGrupos = async(req,res) => {
+    try{
+      let {group, categoria} = req.body
+      let {ID, Privado, NombreGrupo, Descripcion} = group
+      Privado = Privado === 'Privado'
+      let records = await db.pool.query(`update "Grupo" set "Nombre" = '${NombreGrupo}',
+          "Privado" = '${Privado}', "Descripcion" = '${Descripcion}', "ID_CategoriaGrupo" = '${categoria}'
+          where "ID" = ${ID}`)
+      res.json({
+        status: 'success',
+        msg: 'actualización exitosa'
+      })
+    }catch (error){
+      console.log(error)
+      res.json({
+        status: 'error',
+        msg: error
+      })
+    }
+  }
+
+const buscarMisSolicitudes = async (req, res) =>{
+  try {
+    console.log('Fetch groups')
+    let {id_user} = req.body
+
+    let respuesta = await db.pool.query(`With "MisGrupos" as (select "Grupo"."ID","Grupo"."Nombre"
+	from "Grupo" inner join "UsuariosGrupo" on "Grupo"."ID"  = "UsuariosGrupo"."ID_grupo"
+				inner join "Usuario" on "Usuario"."ID"  = "UsuariosGrupo"."ID_usuario"
+			where "UsuariosGrupo"."ID_usuario" = ${id_user} and "UsuariosGrupo"."ID_permiso" = 1)
+
+select "MisGrupos"."ID" as "IDgrupo", "MisGrupos"."Nombre" as "NombreGrupo" , "Usuario"."Nombres", "Usuario"."Apellidos","Usuario"."ID"
+	from "MisGrupos" inner join "UsuariosGrupo" on "MisGrupos"."ID"  = "UsuariosGrupo"."ID_grupo"
+	inner join "Usuario" on "Usuario"."ID"  = "UsuariosGrupo"."ID_usuario"
+	where "UsuariosGrupo"."ID_permiso" = 3`)
+    console.log(respuesta)
+    if(respuesta.rows.length >0){
+      res.json(respuesta.rows)
+    }
+    else{
+      res.json({message: "No se encontraron solicitudes :("})
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 module.exports={
     crearGrupo,
     grCategoriasGet,
@@ -166,6 +241,10 @@ module.exports={
     buscarGrupos,
     buscarGruposPorNombre,
     verificarSolicitud ,
-    solicitarMembresia
+    solicitarMembresia,
+    buscarMisGrupos,
+    buscarGruposPorNombre,
+    updateGrupos,
+    buscarMisSolicitudes
 }
 
