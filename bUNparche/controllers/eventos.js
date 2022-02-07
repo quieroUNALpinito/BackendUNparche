@@ -28,19 +28,35 @@ const gruposDeUsuario = async (req,res) => {
 
 const crearEvento = async (req,res) => {
     try {
-        let { asunto, descripcion, tipoEvento, fecha,  duracion, presencial,  bloficial, lugaroficial, recurrente , nombreubicacion, privado, usuario } = req.body
+        let { asunto, descripcion, tipoEvento, fecha,  duracion, presencial,  bloficial, lugaroficial, recurrente , nombreubicacion, privado, usuario, eventogrupo, grupo } = req.body
         let sqlIns = ``
-        if(presencial){
+        console.log(eventogrupo)
+        if(eventogrupo){
+          if(presencial){
             if(bloficial){
-                sqlIns = `INSERT INTO "Evento" ( "Nombre", "Descripcion", "ID_TipoEvento", "Hora", "Duracion", "Presencial", "LugarOficial", "ID_lugarOficial", "ID_creador", "ID_grupo", "Recurrente", "Privado" )`+
-                `VALUES( '`+asunto+`', '`+descripcion+`', '`+tipoEvento.ID+`' , '`+fecha+`' , '`+duracion+`:00:00' , '`+presencial+`' , '`+bloficial+`' , `+lugaroficial.ID+` , `+usuario+` , null , '`+recurrente+`', `+privado+`  )`
+                    sqlIns = `INSERT INTO "Evento" ( "Nombre", "Descripcion", "ID_TipoEvento", "Hora", "Duracion", "Presencial", "LugarOficial", "ID_lugarOficial", "ID_creador", "ID_grupo", "Recurrente", "Privado" )`+
+                  `VALUES( '`+asunto+`', '`+descripcion+`', '`+tipoEvento.ID+`' , '`+fecha+`' , '`+duracion+`:00:00' , '`+presencial+`' , '`+bloficial+`' , `+lugaroficial.ID+` , `+usuario+` , '`+grupo.ID+`' , '`+recurrente+`', `+privado+`  )`
+            }else{
+                sqlIns = `INSERT INTO "Evento" ( "Nombre", "Descripcion", "ID_TipoEvento", "Hora", "Duracion", "Presencial", "LugarOficial", "NombreUbicacion", "CoordenadasUbicacion", "ID_creador", "ID_grupo", "Recurrente", "Privado" )`+
+                `VALUES( '`+asunto+`', '`+descripcion+`', '`+tipoEvento.ID+`' , '`+fecha+`' , '`+duracion+`:00:00' , '`+presencial+`' , '`+bloficial+`' , '`+nombreubicacion+`' , null , `+usuario+` , '`+grupo.ID+`' , '`+recurrente+`', `+privado+`  )`
+            }
+          }else{
+              sqlIns = `INSERT INTO "Evento" ( "Nombre", "Descripcion", "ID_TipoEvento", "Hora", "Duracion", "Presencial", "ID_creador", "ID_grupo", "Recurrente", "Privado" )`+
+                  `VALUES( '`+asunto+`', '`+descripcion+`', '`+tipoEvento.ID+`' , '`+fecha+`' , '`+duracion+`:00:00' , '`+presencial+`' , `+usuario+` , '`+grupo.ID+`' , '`+recurrente+`', `+privado+`   )`
+          }
+        }else{
+          if(presencial){
+            if(bloficial){
+                    sqlIns = `INSERT INTO "Evento" ( "Nombre", "Descripcion", "ID_TipoEvento", "Hora", "Duracion", "Presencial", "LugarOficial", "ID_lugarOficial", "ID_creador", "ID_grupo", "Recurrente", "Privado" )`+
+                  `VALUES( '`+asunto+`', '`+descripcion+`', '`+tipoEvento.ID+`' , '`+fecha+`' , '`+duracion+`:00:00' , '`+presencial+`' , '`+bloficial+`' , `+lugaroficial.ID+` , `+usuario+` , null , '`+recurrente+`', `+privado+`  )`
             }else{
                 sqlIns = `INSERT INTO "Evento" ( "Nombre", "Descripcion", "ID_TipoEvento", "Hora", "Duracion", "Presencial", "LugarOficial", "NombreUbicacion", "CoordenadasUbicacion", "ID_creador", "ID_grupo", "Recurrente", "Privado" )`+
                 `VALUES( '`+asunto+`', '`+descripcion+`', '`+tipoEvento.ID+`' , '`+fecha+`' , '`+duracion+`:00:00' , '`+presencial+`' , '`+bloficial+`' , '`+nombreubicacion+`' , null , `+usuario+` , null , '`+recurrente+`', `+privado+`  )`
             }
-        }else{
-            sqlIns = `INSERT INTO "Evento" ( "Nombre", "Descripcion", "ID_TipoEvento", "Hora", "Duracion", "Presencial", "ID_creador", "ID_grupo", "Recurrente", "Privado" )`+
-                `VALUES( '`+asunto+`', '`+descripcion+`', '`+tipoEvento.ID+`' , '`+fecha+`' , '`+duracion+`:00:00' , '`+presencial+`' , `+usuario+` , null , '`+recurrente+`', `+privado+`  )`
+          }else{
+              sqlIns = `INSERT INTO "Evento" ( "Nombre", "Descripcion", "ID_TipoEvento", "Hora", "Duracion", "Presencial", "ID_creador", "ID_grupo", "Recurrente", "Privado" )`+
+                  `VALUES( '`+asunto+`', '`+descripcion+`', '`+tipoEvento.ID+`' , '`+fecha+`' , '`+duracion+`:00:00' , '`+presencial+`' , `+usuario+` , null , '`+recurrente+`', `+privado+`  )`
+          }
         }
         let records = await db.pool.query(sqlIns)
         res.json({
